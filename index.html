@@ -1,11 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Hello , World!</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="A simple, clear way to record and review class attendance." />
+    <title>Classmark — Class Attendance</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./" aria-label="Classmark home">
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 5l9 5.5-9 5.5-9-5.5Z"/><path d="M7 13v4c2.8 2.2 7.2 2.2 10 0v-4M21 10.5V16"/></svg></span>
+          <span>Classmark</span>
+        </a>
+        <label class="desktop-search search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <span class="sr-only">Search students or classes</span>
+          <input id="desktop-search" type="search" placeholder="Search a student or class..." autocomplete="off" />
+        </label>
+        <button class="profile-button" type="button" aria-label="Admin profile">
+          <span class="profile-avatar" aria-hidden="true">AM</span><span class="profile-name">Alex Morgan</span>
+          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="page-intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <nav class="breadcrumb" aria-label="Breadcrumb"><span>Classes</span><span aria-hidden="true">/</span><span aria-current="page">Attendance</span></nav>
+          <h1 id="page-title">Good morning, Alex <span class="sunburst" aria-hidden="true">✳</span></h1>
+          <p>Here&apos;s your attendance overview for the selected week.</p>
+        </div>
+        <div class="filters" aria-label="Attendance filters">
+          <div class="date-pill"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><time id="today-date"></time></div>
+          <label class="select-pill"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span class="sr-only">Attendance week</span><select id="week-select" aria-label="Attendance week"></select><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></label>
+          <label class="select-pill"><span class="sr-only">Filter by class</span><select id="class-select" aria-label="Filter by class"></select><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></label>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Attendance summary">
+        <article class="summary-card"><div class="summary-top"><span>Total students</span><span class="summary-icon summary-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM20 8v6M23 11h-6"/></svg></span></div><div class="summary-value"><strong id="total-count">0</strong><span>students</span></div><p>Enrolled in this class</p></article>
+        <article class="summary-card"><div class="summary-top"><span>Present this week</span><span class="summary-icon summary-green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span></div><div class="summary-value"><strong id="present-count">0</strong><span>students</span></div><p id="attendance-rate">0% attendance rate</p></article>
+        <article class="summary-card"><div class="summary-top"><span>Absent this week</span><span class="summary-icon summary-amber" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></div><div class="summary-value"><strong id="absent-count">0</strong><span>students</span></div><p id="unmarked-count">0 yet to be marked</p></article>
+      </section>
+
+      <section class="attendance-panel" aria-labelledby="attendance-title">
+        <header class="panel-header">
+          <div><h2 id="attendance-title">Class attendance · Week 1</h2><p id="attendance-description">Mark each student present or absent for this week.</p></div>
+          <div class="panel-actions">
+            <button class="button button-outline" id="add-class-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add class</span></button>
+            <button class="button button-primary" id="add-student-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add student</span></button>
+            <label class="mobile-search search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><span class="sr-only">Search students</span><input id="mobile-search" type="search" placeholder="Search students" autocomplete="off" /></label>
+            <button class="button button-outline export-button" id="export-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg><span>Export</span></button>
+          </div>
+        </header>
+        <div class="table-scroll">
+          <table class="attendance-table">
+            <thead><tr><th scope="col">Class</th><th scope="col">Student name</th><th scope="col" class="center">Present</th><th scope="col" class="center">Absent</th><th scope="col">Reason for absence</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody id="student-rows"></tbody>
+          </table>
+        </div>
+        <footer class="panel-footer"><p id="showing-count">Showing 0 of 0 students</p><button class="button button-primary save-button" id="save-button" type="button">Save attendance</button></footer>
+      </section>
+
+      <footer class="site-footer"><span>© 2026 Classmark · Making every day count</span><nav aria-label="Footer"><a href="mailto:support@classmark.app">Contact</a><a href="#help">Help</a><a href="#terms">Terms &amp; privacy</a></nav></footer>
+    </main>
+
+    <dialog id="app-dialog" class="app-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
+    <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true"></div>
+  </body>
 </html>
